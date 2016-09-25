@@ -1,33 +1,34 @@
-package com.toyblockchain.storage;
+package com.toyblockchain.storage.merkletree;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import static com.toyblockchain.crypto.Encodings.hex;
+import static com.toyblockchain.crypto.Hashes.sha256;
 
-public class Node {
+public class MerkleNode {
 
-    private Node parent;
-    private Node left;
-    private Node right;
+    private MerkleNode parent;
+    private MerkleNode left;
+    private MerkleNode right;
     private String hash;
 
     /**
      * Leaf node
      */
-    Node(String content) {
-        this.hash = DigestUtils.sha256Hex(content);
+    MerkleNode(String hash) {
+        this.hash = hash;
     }
 
     /**
      * Branch Node
      */
-    Node(Node node1, Node node2) {
+    MerkleNode(MerkleNode node1, MerkleNode node2) {
         this.left = node1;
         this.left.parent = this;
         this.right = node2;
         this.right.parent = this;
-        this.hash = DigestUtils.sha256Hex(left.hash + right.hash);
+        this.hash = hex(sha256(left.hash + right.hash));
     }
 
-    Node getSibling() {
+    MerkleNode getSibling() {
         if (parent == null) {
             return null;
         }
@@ -44,7 +45,7 @@ public class Node {
         return hash;
     }
 
-    Node getParent() {
+    MerkleNode getParent() {
         return parent;
     }
 

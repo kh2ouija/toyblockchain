@@ -1,4 +1,4 @@
-package com.toyblockchain.storage;
+package com.toyblockchain.storage.merkletree;
 
 import org.paumard.streams.StreamsUtils;
 
@@ -8,18 +8,26 @@ import static java.util.stream.Collectors.toList;
 
 public class MerkleTree {
 
-    private Node root;
-    private Map<String, Node> leaves = new HashMap<>();
+    private MerkleNode root;
+    private Map<String, MerkleNode> leaves = new HashMap<>();
 
     private MerkleTree() {
     }
 
-    public static MerkleTree of(String... contents) {
+    public static MerkleTree of(List<String> values) {
+        return buildMerkleTree(values);
+    }
+
+    public static MerkleTree of(String... values) {
+        return buildMerkleTree(Arrays.asList(values));
+    }
+
+    private static MerkleTree buildMerkleTree(List<String> values) {
         MerkleTree tree = new MerkleTree();
 
         // the leaves
-        List<Node> level = Arrays.stream(contents)
-                .map(Node::new)
+        List<MerkleNode> level = values.stream()
+                .map(MerkleNode::new)
                 .peek(node -> tree.leaves.put(node.getHash(), node))
                 .collect(toList());
 
@@ -31,7 +39,7 @@ public class MerkleTree {
             }
             level = StreamsUtils.group(level.stream(), 2)
                     .map(pairStream -> pairStream.collect(toList()))
-                    .map(list -> new Node(list.get(0), list.get(1)))
+                    .map(list -> new MerkleNode(list.get(0), list.get(1)))
                     .collect(toList());
         }
 
@@ -39,8 +47,12 @@ public class MerkleTree {
         return tree;
     }
 
+    public MerkleNode getRootNode() {
+        return root;
+    }
+
     public Optional<List<String>> getPath(String hash) {
-        Node node = leaves.get(hash);
+        MerkleNode node = leaves.get(hash);
         if (node != null) {
             List<String> path = new ArrayList<>();
             while (!node.equals(root)) {

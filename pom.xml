@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.grayatom</groupId>
-    <artifactId>merkle</artifactId>
+    <groupId>com.toyblockchain</groupId>
+    <artifactId>blockchain</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <build>
@@ -13,7 +13,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>(whatever version is current)</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -27,6 +26,11 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.52</version>
         </dependency>
         <dependency>
             <groupId>org.paumard</groupId>
