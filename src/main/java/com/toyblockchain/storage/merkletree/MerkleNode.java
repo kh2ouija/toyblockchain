@@ -1,19 +1,19 @@
 package com.toyblockchain.storage.merkletree;
 
 import static com.toyblockchain.crypto.Encodings.hex;
-import static com.toyblockchain.crypto.Hashes.sha256;
+import static com.toyblockchain.crypto.Digests.sha256;
 
 public class MerkleNode {
 
     private MerkleNode parent;
     private MerkleNode left;
     private MerkleNode right;
-    private String hash;
+    private byte[] hash;
 
     /**
      * Leaf node
      */
-    MerkleNode(String hash) {
+    MerkleNode(byte[] hash) {
         this.hash = hash;
     }
 
@@ -25,7 +25,11 @@ public class MerkleNode {
         this.left.parent = this;
         this.right = node2;
         this.right.parent = this;
-        this.hash = hex(sha256(left.hash + right.hash));
+
+        byte[] hashes = new byte[32 + 32];
+        System.arraycopy(left.hash, 0, hashes, 0, 32);
+        System.arraycopy(right.hash, 0, hashes, 32, 32);
+        this.hash = sha256(hashes);
     }
 
     MerkleNode getSibling() {
@@ -41,7 +45,7 @@ public class MerkleNode {
         }
     }
 
-    String getHash() {
+    public byte[] getHash() {
         return hash;
     }
 
@@ -51,6 +55,6 @@ public class MerkleNode {
 
     @Override
     public String toString() {
-        return hash;
+        return hex(hash);
     }
 }

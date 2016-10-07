@@ -19,6 +19,9 @@ public class Wallet {
         this.keyPair = keyPair;
     }
 
+    /**
+     * @return the compressed public key
+     */
     public String getPublicKey() {
         if (publicKey == null) {
             publicKey = KeyOperations.calculatePublicKey(keyPair);
@@ -26,6 +29,9 @@ public class Wallet {
         return publicKey;
     }
 
+    /**
+     * @return the wallet address
+     */
     public String getAddress() {
         if (address == null) {
             address = KeyOperations.calculateAddress(getPublicKey());
@@ -33,6 +39,9 @@ public class Wallet {
         return address;
     }
 
+    /**
+     * @return a Wallet with a randomly generated key pair
+     */
     public static Wallet generate() {
         KeyPair keyPair = KeyOperations.generateKeyPair();
         return new Wallet(keyPair);

@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
-public class Hashes {
+public class Digests {
 
     private static final MessageDigest sha256;
     private static final MessageDigest ripemd160;

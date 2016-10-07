@@ -1,15 +1,17 @@
 package com.toyblockchain.storage.merkletree;
 
+import com.toyblockchain.crypto.Digests;
 import org.paumard.streams.StreamsUtils;
 
 import java.util.*;
 
+import static com.toyblockchain.crypto.Encodings.hex;
 import static java.util.stream.Collectors.toList;
 
 public class MerkleTree {
 
     private MerkleNode root;
-    private Map<String, MerkleNode> leaves = new HashMap<>();
+    private Map<byte[], MerkleNode> leaves = new HashMap<>();
 
     private MerkleTree() {
     }
@@ -18,15 +20,12 @@ public class MerkleTree {
         return buildMerkleTree(values);
     }
 
-    public static MerkleTree of(String... values) {
-        return buildMerkleTree(Arrays.asList(values));
-    }
-
     private static MerkleTree buildMerkleTree(List<String> values) {
         MerkleTree tree = new MerkleTree();
 
         // the leaves
         List<MerkleNode> level = values.stream()
+                .map(Digests::sha256)
                 .map(MerkleNode::new)
                 .peek(node -> tree.leaves.put(node.getHash(), node))
                 .collect(toList());
@@ -56,7 +55,7 @@ public class MerkleTree {
         if (node != null) {
             List<String> path = new ArrayList<>();
             while (!node.equals(root)) {
-                path.add(node.getSibling().getHash());
+                path.add(hex(node.getSibling().getHash()));
                 node = node.getParent();
             }
             return Optional.of(path);
