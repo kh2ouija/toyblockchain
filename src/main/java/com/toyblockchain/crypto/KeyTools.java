@@ -15,7 +15,7 @@ import static com.toyblockchain.crypto.Encodings.hex;
 import static com.toyblockchain.crypto.Digests.ripemd160;
 import static com.toyblockchain.crypto.Digests.sha256;
 
-public class KeyOperations {
+public class KeyTools {
 
     /**
      * https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
@@ -55,11 +55,18 @@ public class KeyOperations {
         }
         byte[] payload = ripemd160(sha256(keyBytes)); // 20 bytes
         byte[] addressBytes = new byte[1 + 20 + 4]; // version + payload + checksum
-        addressBytes[0] = 0x00; // version
-        System.arraycopy(payload, 0, addressBytes, 1, 20); // append payload
+
+        // 1 byte: version
+        addressBytes[0] = 0x00;
+
+        // 20 bytes: payload
+        System.arraycopy(payload, 0, addressBytes, 1, 20);
+
+        // 4 bytes: checksum
         byte[] preChecksum = Arrays.copyOfRange(addressBytes, 0, 21);
-        byte[] checksum = Arrays.copyOfRange(sha256(sha256(preChecksum)), 0, 4); // first 4 bytes
-        System.arraycopy(checksum, 0, addressBytes, 21, 4); // append checksum
+        byte[] checksum = Arrays.copyOfRange(sha256(sha256(preChecksum)), 0, 4);
+        System.arraycopy(checksum, 0, addressBytes, 21, 4);
+
         return base58(addressBytes);
     }
 

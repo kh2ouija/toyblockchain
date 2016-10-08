@@ -87,10 +87,11 @@ public class Block {
     @Override
     public String toString() {
         return new GsonBuilder().setPrettyPrinting().create().toJson(ImmutableMap.of(
+                "hash", hex(blockHeaderHash),
                 "previousBlockHash", hex(previousBlockHash),
                 "merkleRoot", hex(merkleRoot),
                 "time", timestamp,
-                "transactions", transactions)
+                "tx", transactions)
         );
     }
 }

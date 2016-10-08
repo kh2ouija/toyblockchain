@@ -17,9 +17,6 @@ public class Blockchain {
     }
 
     public Block getLatest() {
-        if (getHeight() == 0) {
-            return null;
-        }
         return chain.get(chain.size() - 1);
     }
 }

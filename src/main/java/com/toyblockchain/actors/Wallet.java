@@ -1,6 +1,6 @@
 package com.toyblockchain.actors;
 
-import com.toyblockchain.crypto.KeyOperations;
+import com.toyblockchain.crypto.KeyTools;
 
 import java.security.KeyPair;
 
@@ -24,7 +24,7 @@ public class Wallet {
      */
     public String getPublicKey() {
         if (publicKey == null) {
-            publicKey = KeyOperations.calculatePublicKey(keyPair);
+            publicKey = KeyTools.calculatePublicKey(keyPair);
         }
         return publicKey;
     }
@@ -34,7 +34,7 @@ public class Wallet {
      */
     public String getAddress() {
         if (address == null) {
-            address = KeyOperations.calculateAddress(getPublicKey());
+            address = KeyTools.calculateAddress(getPublicKey());
         }
         return address;
     }
@@ -43,7 +43,7 @@ public class Wallet {
      * @return a Wallet with a randomly generated key pair
      */
     public static Wallet generate() {
-        KeyPair keyPair = KeyOperations.generateKeyPair();
+        KeyPair keyPair = KeyTools.generateKeyPair();
         return new Wallet(keyPair);
     }
 }

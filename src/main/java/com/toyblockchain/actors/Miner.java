@@ -17,13 +17,10 @@ public class Miner {
         this.blockchain = blockchain;
     }
 
-    public void mineBlock(List<Transaction> transactions) {
-        Block block = prepareBlock(transactions, blockchain.getLatest().getBlockHeaderHash());
+    public Block mineBlock(List<Transaction> transactions) {
+        Block block = new Block(0, blockchain.getLatest().getBlockHeaderHash(), transactions);
         blockchain.offer(block);
-    }
-
-    public Block prepareBlock(List<Transaction> transactions, byte[] previousBlockHash) {
-        return new Block(0, previousBlockHash, transactions);
+        return block;
     }
 
 }

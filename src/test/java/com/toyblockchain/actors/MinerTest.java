@@ -24,11 +24,8 @@ public class MinerTest {
     public void setUp() throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        genesis = new Block(0,
-                ByteBuffer.allocate(32).array(),
-                Collections.singletonList(new Transaction("Alice", "Bob", 1)));
-
-        System.out.println();
+        genesis = new Block(0, ByteBuffer.allocate(32).array(), Collections.singletonList(new Transaction("Alice", "Bob", 1)));
+        System.out.println(genesis);
         blockchain = new Blockchain();
         blockchain.offer(genesis);
         miner = new Miner(blockchain);
@@ -37,7 +34,8 @@ public class MinerTest {
     @Test
     public void mineBlock() throws Exception {
         List<Transaction> transactions = Fixtures.createTransactions();
-        miner.mineBlock(transactions);
+        Block block = miner.mineBlock(transactions);
+        System.out.println(block);
         assertEquals(2, blockchain.getHeight());
         assertEquals(genesis.getBlockHeaderHash(), blockchain.getLatest().getPreviousBlockHash());
     }

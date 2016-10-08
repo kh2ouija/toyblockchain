@@ -1,5 +1,7 @@
 package com.toyblockchain.storage.blockchain;
 
+import com.google.gson.Gson;
+
 public class Transaction {
 
     private String from;
@@ -26,11 +28,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "{ "
-                + "\"from\": \"" + from + "\", "
-                + "\"to\": \"" + to + "\", "
-                + "\"amount\": \"" + amount + "\""
-                + "}";
+        return new Gson().toJson(this);
     }
 }
 
