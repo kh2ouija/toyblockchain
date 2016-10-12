@@ -17,15 +17,15 @@ public class Wallet {
 
     private Wallet(KeyPair keyPair) {
         this.keyPair = keyPair;
+        // no need for lazy initialization
+        this.publicKey = KeyTools.calculatePublicKey(keyPair);
+        this.address = KeyTools.calculateAddress(getPublicKey());
     }
 
     /**
      * @return the compressed public key
      */
     public String getPublicKey() {
-        if (publicKey == null) {
-            publicKey = KeyTools.calculatePublicKey(keyPair);
-        }
         return publicKey;
     }
 
@@ -33,9 +33,6 @@ public class Wallet {
      * @return the wallet address
      */
     public String getAddress() {
-        if (address == null) {
-            address = KeyTools.calculateAddress(getPublicKey());
-        }
         return address;
     }
 
@@ -43,7 +40,6 @@ public class Wallet {
      * @return a Wallet with a randomly generated key pair
      */
     public static Wallet generate() {
-        KeyPair keyPair = KeyTools.generateKeyPair();
-        return new Wallet(keyPair);
+        return new Wallet(KeyTools.generateKeyPair());
     }
 }

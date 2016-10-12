@@ -46,6 +46,9 @@ public class KeyTools {
         return hex(pubBytes);
     }
 
+    /**
+     * https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
+     */
     public static String calculateAddress(String publicKey) {
         byte[] keyBytes;
         try {
