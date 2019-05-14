@@ -8,12 +8,12 @@ import java.security.Security;
 public class WalletTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
     @Test
-    public void name() throws Exception {
+    public void name() {
         Wallet wallet = Wallet.generate();
         System.out.println("pub: " + wallet.getPublicKey());
         System.out.println("address: " + wallet.getAddress());

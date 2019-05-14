@@ -1,8 +1,11 @@
 package com.toyblockchain.crypto;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import java.security.Security;
+
+import static com.toyblockchain.crypto.Digests.sha256;
 
 public class KeyOperationsTest {
 

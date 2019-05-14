@@ -8,29 +8,9 @@ public class MerkleNode {
     private MerkleNode parent;
     private MerkleNode left;
     private MerkleNode right;
-    private byte[] hash;
+    byte[] hash;
 
-    /**
-     * Leaf node
-     */
-    MerkleNode(byte[] hash) {
-        this.hash = hash;
-    }
-
-    /**
-     * Branch Node
-     */
-    MerkleNode(MerkleNode node1, MerkleNode node2) {
-        this.left = node1;
-        this.left.parent = this;
-        this.right = node2;
-        this.right.parent = this;
-
-        byte[] hashes = new byte[32 + 32];
-        System.arraycopy(left.hash, 0, hashes, 0, 32);
-        System.arraycopy(right.hash, 0, hashes, 32, 32);
-        this.hash = sha256(hashes);
-    }
+    MerkleNode() {}
 
     MerkleNode getSibling() {
         if (parent == null) {
@@ -45,12 +25,40 @@ public class MerkleNode {
         }
     }
 
+    boolean hasParent() {
+        return (parent != null);
+    }
+
+    public MerkleNode getParent() {
+        return parent;
+    }
+
+    public void setParent(MerkleNode parent) {
+        this.parent = parent;
+    }
+
+    public MerkleNode getLeft() {
+        return left;
+    }
+
+    public void setLeft(MerkleNode left) {
+        this.left = left;
+    }
+
+    public MerkleNode getRight() {
+        return right;
+    }
+
+    public void setRight(MerkleNode right) {
+        this.right = right;
+    }
+
     public byte[] getHash() {
         return hash;
     }
 
-    MerkleNode getParent() {
-        return parent;
+    public void setHash(byte[] hash) {
+        this.hash = hash;
     }
 
     @Override

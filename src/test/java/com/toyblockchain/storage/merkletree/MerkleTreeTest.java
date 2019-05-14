@@ -12,6 +12,8 @@ import java.security.Security;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.toyblockchain.crypto.Digests.sha256;
+import static com.toyblockchain.crypto.Encodings.hex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -19,22 +21,22 @@ public class MerkleTreeTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
     @Test
     public void firstTest() {
         List<Transaction> transactions = Fixtures.createTransactions();
-        List<String> txHashes = transactions.stream()
+        MerkleTree tree = new MerkleTreeBuilder().buildTreeFor(transactions);
+
+        transactions.stream()
                 .map(Transaction::toString)
                 .map(Digests::sha256)
                 .map(Encodings::hex)
-                .collect(Collectors.toList());
+                .forEach(txHash -> assertEquals(4, tree.getPath(txHash).get().size()));
 
-        MerkleTree tree = MerkleTree.of(txHashes);
-        txHashes.forEach(txHash -> assertEquals(4, tree.getPath(txHash).get().size()));
-        assertFalse(tree.getPath(DigestUtils.sha256Hex("foobar")).isPresent());
+        assertFalse(tree.getPath(hex(sha256("foobar"))).isPresent());
     }
 
 }

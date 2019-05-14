@@ -16,12 +16,12 @@ import static org.junit.Assert.assertEquals;
 
 public class MinerTest {
 
+    private Block genesis;
     private Blockchain blockchain;
     private Miner miner;
-    public Block genesis;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
         genesis = new Block(0, ByteBuffer.allocate(32).array(), Collections.singletonList(new Transaction("Alice", "Bob", 1)));
@@ -32,7 +32,7 @@ public class MinerTest {
     }
 
     @Test
-    public void mineBlock() throws Exception {
+    public void mineBlock() {
         List<Transaction> transactions = Fixtures.createTransactions();
         Block block = miner.mineBlock(transactions);
         System.out.println(block);

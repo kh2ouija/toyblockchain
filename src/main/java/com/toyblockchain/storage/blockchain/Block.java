@@ -2,7 +2,7 @@ package com.toyblockchain.storage.blockchain;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
-import com.toyblockchain.storage.merkletree.MerkleTree;
+import com.toyblockchain.storage.merkletree.MerkleTreeBuilder;
 
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -10,7 +10,6 @@ import java.util.List;
 
 import static com.toyblockchain.crypto.Digests.sha256;
 import static com.toyblockchain.crypto.Encodings.hex;
-import static java.util.stream.Collectors.toList;
 
 public class Block {
 
@@ -41,10 +40,7 @@ public class Block {
     }
 
     private byte[] computeMerkleRoot() {
-        List<String> transactionsPlaintext = transactions.stream()
-                .map(Transaction::toString)
-                .collect(toList());
-        return MerkleTree.of(transactionsPlaintext).getRootNode().getHash();
+        return new MerkleTreeBuilder().buildTreeFor(transactions).getRootNode().getHash();
     }
 
     private byte[] computeHeader() {

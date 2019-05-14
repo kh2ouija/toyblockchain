@@ -1,67 +1,38 @@
 package com.toyblockchain.storage.merkletree;
 
-import com.toyblockchain.crypto.Digests;
-import org.paumard.streams.StreamsUtils;
+import com.toyblockchain.crypto.Encodings;
 
-import java.util.*;
-
-import static com.toyblockchain.crypto.Encodings.hex;
-import static java.util.stream.Collectors.toList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MerkleTree {
 
     private MerkleNode root;
-    private Map<byte[], MerkleNode> leaves = new HashMap<>();
+    private Map<String, MerkleLeaf> leaves;
 
-    private MerkleTree() {
-    }
-
-    public static MerkleTree of(List<String> values) {
-        return buildMerkleTree(values);
-    }
-
-    private static MerkleTree buildMerkleTree(List<String> values) {
-        MerkleTree tree = new MerkleTree();
-
-        // the leaves
-        List<MerkleNode> level = values.stream()
-                .map(Digests::sha256)
-                .map(MerkleNode::new)
-                .peek(node -> tree.leaves.put(node.getHash(), node))
-                .collect(toList());
-
-        // pairing loop
-        while (level.size() != 1) {
-            // if uneven nodes, last one gets paired with self
-            if (level.size() % 2 != 0) {
-                level.add(level.get(level.size() - 1));
-            }
-            level = StreamsUtils.group(level.stream(), 2)
-                    .map(pairStream -> pairStream.collect(toList()))
-                    .map(list -> new MerkleNode(list.get(0), list.get(1)))
-                    .collect(toList());
-        }
-
-        tree.root = level.get(0);
-        return tree;
+    MerkleTree(MerkleNode root, Map<String, MerkleLeaf> leaves) {
+        this.root = root;
+        this.leaves = leaves;
     }
 
     public MerkleNode getRootNode() {
         return root;
     }
 
-    public Optional<List<String>> getPath(String hash) {
-        MerkleNode node = leaves.get(hash);
-        if (node != null) {
-            List<String> path = new ArrayList<>();
-            while (!node.equals(root)) {
-                path.add(hex(node.getSibling().getHash()));
-                node = node.getParent();
-            }
-            return Optional.of(path);
-        } else {
-            return Optional.empty();
-        }
+    public MerkleLeaf getLeaf(String hash) {
+        return leaves.get(hash);
     }
 
+    public Optional<List<String>> getPath(String hash) {
+        return Optional.ofNullable(getLeaf(hash)).map(node ->
+                Stream.iterate(node, MerkleNode::hasParent, MerkleNode::getParent)
+                        .map(MerkleNode::getSibling)
+                        .map(MerkleNode::getHash)
+                        .map(Encodings::hex)
+                        .collect(Collectors.toList())
+        );
+    }
 }
